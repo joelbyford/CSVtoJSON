@@ -32,7 +32,7 @@ jobs:
 
     # Run a build of the solution file outputing to a specified directory
     - name: Run MSBuild
-      run: msbuild .\CSVtoJSON.sln /p:OutputPath=\mydir /p:Configuration=Debug
+      run: msbuild .\CSVtoJSON.sln /p:Configuration=Debug
        
     # Deploying from the output path above using a publish profile cached in secrets
     - name: 'Run Azure webapp deploy action using publish profile credentials'
@@ -40,4 +40,4 @@ jobs:
       with: 
         app-name: ${{env.WEB_APP_NAME}} # Replace with your app name
         publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
-        package: '\mydir'
+        package: '${{env.WEB_APP_NAME}}/'
