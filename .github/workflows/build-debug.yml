@@ -1,0 +1,44 @@
+name: Build and Deploy .NET Framework
+# Deployment goes to a demo environment only and only non-master branches
+# Master changes would be deployed to production enviroment and build release (not debug)
+
+on:
+  pull_request:
+    branches: master
+env:
+  WEB_APP_NAME: CSVtoJSON 
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+
+    # checkout the repo
+    - uses: actions/checkout@master  
+    
+    # Install Nuget and run Nuget restore
+    - name: NuGet Restore
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.3.1'
+    - run: nuget restore
+  
+    # dotnet msbuild 
+    #- name: msBuild with dotnet
+    #  run: C:\"Program Files (x86)"\"Microsoft Visual Studio"\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe .\SampleWebApplication.sln -t:rebuild /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=".\\WebAppContent"
+  
+    # Finds and adds MSBuild to the path
+    - name: Setup MSBuild.exe 
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    # Run a build of the solution file outputing to a specified directory
+    - name: Run MSBuild
+      run: msbuild .\CSVtoJSON.sln /p:OutputPath=\mydir /p:Configuration=Debug
+       
+    # Deploying from the output path above using a publish profile cached in secrets
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+      uses: azure/webapps-deploy@v1
+      with: 
+        app-name: ${{env.WEB_APP_NAME}} # Replace with your app name
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
+        package: '\mydir'
