@@ -1,9 +1,8 @@
 name: Build and Deploy .NET Framework
-# Deployment goes to a demo environment only and only non-master branches
-# Master changes would be deployed to production enviroment and build release (not debug)
+# Only an example, therefore pushing diretctly to production from master.
 
 on:
-  pull_request:
+  push:
     branches: master
 env:
   WEB_APP_NAME: CSVtoJSON 
