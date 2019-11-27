@@ -2,7 +2,7 @@ name: Build and Deploy .NET Framework
 # Only an example, therefore pushing diretctly to production from master.
 
 on:
-  pull_request:
+  push:
     branches: master
 env:
   WEB_APP_NAME: CSVtoJSON        # Replace with your app name
@@ -28,14 +28,14 @@ jobs:
     - name: Setup MSBuild.exe 
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    # Run a build of the solution file with the specified configuration (Debug in this example)
+    # Run a build of the solution file with the specified configuration (Release in this example)
     - name: Run MSBuild
-      run: msbuild .\${{env.SOLUTION_FILE_NAME}}.sln /p:Configuration=Debug
+      run: msbuild .\${{env.SOLUTION_FILE_NAME}}.sln /p:Configuration=Release
        
     # Deploying the package assuming your project and solution are named the same
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
         app-name: ${{env.WEB_APP_NAME}} 
-        publish-profile: ${{ secrets.azureWebAppPublishProfileStaging }} # Define secret variable in repository settings as per action documentation
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
         package: '${{env.PROJECT_FILE_NAME}}/'  
