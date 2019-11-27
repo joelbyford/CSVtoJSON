@@ -5,7 +5,9 @@ on:
   push:
     branches: master
 env:
-  WEB_APP_NAME: CSVtoJSON 
+  WEB_APP_NAME: CSVtoJSON        # Replace with your app name
+  SOLUTION_FILE_NAME: CSVtoJSON  # Replace with your Solution name
+  PROJECT_FILE_NAME: CSVtoJSON   # Replace with your Project name
 
 jobs:
   build-and-deploy:
@@ -21,23 +23,19 @@ jobs:
       with:
         nuget-version: '5.3.1'
     - run: nuget restore
-  
-    # dotnet msbuild 
-    #- name: msBuild with dotnet
-    #  run: C:\"Program Files (x86)"\"Microsoft Visual Studio"\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe .\SampleWebApplication.sln -t:rebuild /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:publishUrl=".\\WebAppContent"
-  
+    
     # Finds and adds MSBuild to the path
     - name: Setup MSBuild.exe 
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    # Run a build of the solution file outputing to a specified directory
+    # Run a build of the solution file with the specified configuration (Release in this example)
     - name: Run MSBuild
-      run: msbuild .\CSVtoJSON.sln /p:Configuration=Debug
+      run: msbuild .\${{env.SOLUTION_FILE_NAME}}.sln /p:Configuration=Release
        
-    # Deploying from the output path above using a publish profile cached in secrets
+    # Deploying the package assuming your project and solution are named the same
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: ${{env.WEB_APP_NAME}} # Replace with your app name
+        app-name: ${{env.WEB_APP_NAME}} 
         publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
-        package: '${{env.WEB_APP_NAME}}/'
+        package: '${{env.PROJECT_FILE_NAME}}/'  
