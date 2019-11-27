@@ -29,7 +29,7 @@ namespace CSVtoJSON.Controllers
         {
             JsonResult resultSet = new JsonResult();
             String value;
-            var lineObject = new JObject();
+            
             string[] headers = new string[1024]; //max of 1024 columns for now
 
             using (TextReader sr = new StringReader(body))
@@ -50,6 +50,7 @@ namespace CSVtoJSON.Controllers
                 //read the rest of the file
                 while (csv.Read())
                 {
+                    var lineObject = new JObject();
                     for (int i = 0; csv.TryGetField<string>(i, out value); i++)
                     {
                         lineObject[headers[i]] = value;

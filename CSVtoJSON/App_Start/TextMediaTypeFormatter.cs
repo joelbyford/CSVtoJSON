@@ -17,9 +17,8 @@ namespace CSVtoJSON.App_Start
     {
         public TextMediaTypeFormatter()
         {
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/xml"));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
         }
 
         public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
