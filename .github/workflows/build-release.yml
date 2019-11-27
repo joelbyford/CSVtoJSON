@@ -1,4 +1,4 @@
-name: Build and Deploy .NET Framework
+name: Build and Deploy .NET Framework - Release to Prod
 # Only an example, therefore pushing diretctly to production from master.
 
 on:
