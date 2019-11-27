@@ -12,8 +12,12 @@ If no delimiter parameter is provided, comma is assumed.
 
 Example test through Postman or REST plugin in VSCode:
 
+```
 POST https://SOME-WEBSITE-URL/api/csvtojson
-Content-Type: text/plain
+Content-Type: text/csv
 
 this,is,a,test
+1,2,3,4
 a,b,c,d
+5,6,7,8
+```
