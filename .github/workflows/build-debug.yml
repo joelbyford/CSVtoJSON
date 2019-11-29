@@ -39,4 +39,4 @@ jobs:
         app-name: ${{env.WEB_APP_NAME}} 
         publish-profile: ${{ secrets.azureWebAppPublishProfileStaging }} # Define secret variable in repository settings as per action documentation
         #package: '${{env.PROJECT_FILE_NAME}}/' 
-        package: '\temp\package.zip'
+        package: '\temp\'
