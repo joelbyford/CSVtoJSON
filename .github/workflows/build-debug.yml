@@ -8,6 +8,7 @@ env:
   WEB_APP_NAME: CSVtoJSON        # Replace with your app name
   SOLUTION_FILE_NAME: CSVtoJSON  # Replace with your Solution name
   PROJECT_FILE_NAME: CSVtoJSON   # Replace with your Project name
+  BUILD_CONFIG: Debug
 
 jobs:
   build-and-deploy:
@@ -30,7 +31,7 @@ jobs:
 
     # Run a build of the solution file with the specified configuration (Debug in this example)
     - name: Run MSBuild
-      run: msbuild .\${{env.SOLUTION_FILE_NAME}}.sln /p:Configuration=Debug /p:DeployOnBuild=true /p:WebPublishMethod=FileSystem  /p:OutDir="\temp"  #/p:PackageLocation="\temp\package.zip"
+      run: msbuild .\${{env.SOLUTION_FILE_NAME}}.sln /p:Configuration=${{env.BUILD_CONFIG}} /p:DeployOnBuild=true /p:WebPublishMethod=FileSystem  /p:OutDir="\temp"
        
     # Deploying the package assuming your project and solution are named the same
     - name: 'Run Azure webapp deploy action using publish profile credentials'
@@ -38,5 +39,4 @@ jobs:
       with: 
         app-name: ${{env.WEB_APP_NAME}} 
         publish-profile: ${{ secrets.azureWebAppPublishProfileStaging }} # Define secret variable in repository settings as per action documentation
-        #package: '${{env.PROJECT_FILE_NAME}}/' 
         package: '\temp\_PublishedWebsites\${{env.PROJECT_FILE_NAME}}'
